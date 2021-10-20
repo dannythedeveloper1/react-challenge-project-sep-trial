@@ -55,4 +55,24 @@ describe('Orders List', () => {
         expect(screen.getByText(/^.*888.*$/gm)).toBeInTheDocument();
 
     });
+
+
+    test('renders correct time format', () => {
+        const orders = [
+            {
+                order_item: "Eggplant and Mushroom Panini",
+                createdAt: "2021-10-19T23:01:01.813Z",   //19:01:01
+                quantity: "777",
+                _id: 1
+            }
+        ];
+        render(
+            <OrdersList
+                orders={orders}
+            />
+        )
+        const displayTime = document.getElementById('time_display');
+        expect(displayTime).toHaveTextContent('19:01:01');
+
+    });
 })
