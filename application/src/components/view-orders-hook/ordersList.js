@@ -8,6 +8,11 @@ const OrdersList = (props) => {
         </div>
     );
 
+    const addZero = (num) => {
+        num = num.toString();
+        return num < 10 ? `0${num}` : num
+    }
+
     return orders.map(order => {
         const createdDate = new Date(order.createdAt);
         return (
@@ -17,7 +22,7 @@ const OrdersList = (props) => {
                     <p>Ordered by: {order.ordered_by || ''}</p>
                 </div>
                 <div className="col-md-4 d-flex view-order-middle-col">
-                    <p>Order placed at {`${createdDate.getHours()}:${createdDate.getMinutes()}:${createdDate.getSeconds()}`}</p>
+                    <p>Order placed at <span id="time_display">{`${addZero(createdDate.getHours())}:${addZero(createdDate.getMinutes())}:${addZero(createdDate.getSeconds())}`}</span></p>
                     <p>Quantity: {order.quantity}</p>
                 </div>
                 <div className="col-md-4 view-order-right-col">
