@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import LoginForm from './login-form/loginForm';
 import './login.css';
 
 class Login extends Component {
-  
+  componentDidUpdate() {
+    if (this.props.token) {
+      this.props.history.push('/view-orders')
+    }
+  }
   render() {
     return (
       <div className="main-body">
@@ -14,6 +19,12 @@ class Login extends Component {
       </div>
     )
   }
+  
+}
+const mapStateToProps = (state) => {
+  return {
+    token: state.auth.token,
+  }
 }
 
-export default Login;
+export default connect(mapStateToProps, null)(Login);
