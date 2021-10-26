@@ -6,6 +6,7 @@ import './viewOrders.css';
 
 export default function ViewOrders(props) {
     const [orders, setOrders] = useState([]);
+    const [render, setRender] = useState(false);
 
     useEffect(() => {
         fetch(`${SERVER_IP}/api/current-orders`)
@@ -17,15 +18,22 @@ export default function ViewOrders(props) {
                     console.log('Error getting orders');
                 }
             });
-    }, [])
+        setRender(false);
+    }, [render])
 
     return (
         <Template>
-            <div className="container-fluid">
-                <OrdersList
-                    orders={orders}
-                />
-            </div>
+            {orders.length == 0 ? (
+                <div className="empty-orders">
+                    <h2>There are no orders to display</h2>
+                </div>
+            ) : (
+                <div className="container-fluid">
+                    {orders.map(order => (
+                        <OrdersList key={order._id} order={order} setRender={setRender} />
+                    ))}
+                </div>
+            )}
         </Template>
     );
 }
