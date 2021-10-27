@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Template } from '../../components';
-import { SERVER_IP } from '../../private';
+import { fetchOrders } from '../../redux';
 import OrdersList from './ordersList';
 import './viewOrders.css';
 
 export default function ViewOrders(props) {
-    const [orders, setOrders] = useState([]);
     const [render, setRender] = useState(false);
-
+    const orders = useSelector(state => state.orderReducer.orders);
+    const dispatch = useDispatch();
     useEffect(() => {
-        fetch(`${SERVER_IP}/api/current-orders`)
-            .then(response => response.json())
-            .then(response => {
-                if(response.success) {
-                    setOrders(response.orders);
-                } else {
-                    console.log('Error getting orders');
-                }
-            });
+        dispatch(fetchOrders());
         setRender(false);
     }, [render])
 

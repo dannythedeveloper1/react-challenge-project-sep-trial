@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { SERVER_IP } from '../../private';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteOrder, editOrder } from '../../redux';
 
 const OrdersList = (props) => {
     const { order } = props;
@@ -10,47 +10,20 @@ const OrdersList = (props) => {
     const menuItemChosen = (event) => setOrderItem(event.target.value);
     const menuQuantityChosen = (event) => setQuantity(event.target.value);
     const auth = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
 
     const addZero = (num) => {
         num = num.toString();
         return num < 10 ? `0${num}` : num
     }
 
-    const order_Url = `${SERVER_IP}/api/delete-order`;
-    const edit_Url = `${SERVER_IP}/api/edit-order`;
-
-    const deleteOrder = (id) => {
-        fetch(order_Url, {
-            method: 'POST',
-            body: JSON.stringify({
-                id
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => res.json())
-            .then(response => console.log("Success", JSON.stringify(response)))
-            .catch(error => console.error(error));
+    const deleteOrders = (id) => {
+        dispatch(deleteOrder(id));
         props.setRender(true);
     }
 
-    const editOrder = (id) => {
-        fetch(edit_Url, {
-            method: 'POST',
-            body: JSON.stringify({
-                id: id,
-                order_item: orderItem,
-                quantity: quantity,
-                ordered_by: auth.email,
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => res.json())
-            .then(response => console.log("Success", JSON.stringify(response)))
-            .catch(error => console.error(error));
+    const editOrders = (id) => {
+        dispatch(editOrder(id, orderItem, quantity, auth));
         setEdit(false);
         props.setRender(true);
     }
@@ -80,7 +53,7 @@ const OrdersList = (props) => {
                         <option value="5">5</option>
                         <option value="6">6</option>
                     </select>
-                    <button type="button" className="order-btn" onClick={() => editOrder(id)}>Update Order!</button>
+                    <button type="button" className="order-btn" onClick={() => editOrders(id)}>Update Order!</button>
                 </form>)
         } else return;
     }
@@ -98,7 +71,7 @@ const OrdersList = (props) => {
             </div>
             <div className="col-md-4 view-order-right-col">
                 <button className="btn btn-success" onClick={() => setEdit(true)}>Edit</button>
-                <button className="btn btn-danger" onClick={() => deleteOrder(order._id)}>Delete</button>
+                <button className="btn btn-danger" onClick={() => deleteOrders(order._id)}>Delete</button>
             </div>
             {openForm(order._id)}
         </div>
