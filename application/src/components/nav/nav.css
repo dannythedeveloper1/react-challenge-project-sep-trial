@@ -28,3 +28,11 @@
     flex: 1;
     flex-direction: row;
 }
+
+.nav-user {
+    flex: 1;
+    text-align: center;
+    align-self: center;
+    padding: .5rem 1rem;
+    border-right: 1px solid #000000;
+}
